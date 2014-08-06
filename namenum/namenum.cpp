@@ -47,7 +47,7 @@ getResult(char* num, char data[][13],int start, int end,int offset)
 
     if(low>high)continue;
     high = low;
-    for(int j = low;j<end;j++)
+    for(int j = low;j<=end;j++)
     {
       if(strncmp(data[low],data[j],offset+1)==0)
         high = j;
@@ -80,6 +80,8 @@ main(void)
   getResult(num,data,0,len-1,0);
   for(int i=0;i<resultNum;i++)
     fout<<res[i]<<endl;
+  if(resultNum==0)
+    fout<<"NONE"<<endl;
 
   return 0;
 }

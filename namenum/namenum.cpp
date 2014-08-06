@@ -79,7 +79,7 @@ main(void)
   strcpy(num,line.c_str());
   getResult(num,data,0,len-1,0);
   for(int i=0;i<resultNum;i++)
-    cout<<res[i]<<endl;
+    fout<<res[i]<<endl;
 
   return 0;
 }

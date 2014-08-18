@@ -10,8 +10,8 @@ LANG: C++
 using namespace std;
 
 int num,stalls,cows;
-int stallMap[50];
-int spareMap[50];
+int stallMap[200];
+int spareMap[200];
 
 void swap(int data[],int i,int j)
 {

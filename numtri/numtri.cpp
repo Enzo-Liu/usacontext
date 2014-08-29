@@ -1,7 +1,7 @@
 /*
-ID: liu.enz1
-PROG: numtri
-LANG: C++
+  ID: liu.enz1
+  PROG: numtri
+  LANG: C++
 */
 #include <iostream>
 #include <fstream>

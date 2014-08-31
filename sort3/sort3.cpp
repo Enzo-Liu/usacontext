@@ -18,8 +18,7 @@ int n;
 int set[MAX] = {0};
 int steps = 0;
 int count[4] = {0};
-int swaps[MAX] = {0};
-int swapNum = 0;
+int swaps[4][4] = {{0}};
 
 void
 input(){
@@ -32,7 +31,7 @@ input(){
 
 void
 output(){
-  fout<<(swapNum%2==0?swapNum/2:swapNum/2+1)<<endl;
+  fout<<steps<<endl;
 }
 
 void
@@ -49,8 +48,24 @@ solve(){
       if(i>=count[1]+count[2]) continue;
       break;
     }
-    swaps[swapNum++] = i;
+    int from = (i<count[1]?1:(i<count[1]+count[2]?2:3));
+    int to = set[i];
+    swaps[from][to] ++;
   }
+  for(int i=1;i<=3;i++)
+    for(int j=i+1;j<=3;j++){
+      int temp = min(swaps[i][j],swaps[j][i]);
+      steps+= temp;
+      swaps[i][j]-=temp;
+      swaps[j][i]-=temp;
+    }
+
+  for(int i=1;i<=3;i++)
+    for(int j=i+1;j<=3;j++)
+      if(swaps[i][j]!=0){
+        steps+= 2*swaps[i][j];
+        return;
+      }
 }
 
 int main() {

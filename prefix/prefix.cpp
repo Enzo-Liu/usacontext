@@ -1,6 +1,6 @@
 /*
   ID: liu.enz1
-  PROG: lamps
+  PROG: prefix
   LANG: C++
 */
 #include <iostream>
@@ -13,203 +13,51 @@
 
 using namespace std;
 
-ofstream fout ("lamps.out");
-ifstream fin ("lamps.in");
+ofstream fout ("prefix.out");
+ifstream fin ("prefix.in");
 
-#define MAX 100
+#define MAX_NUM 200
+#define MAX_LEN 11
+#define MAX_STR_LEN 200001
 
-int n,c;
-
-int on[MAX] = {0};
-int off[MAX] = {0};
-int onNum;
-int offNum;
+char str[MAX_STR_LEN] = {0};
+int strLen=0;
 
 typedef struct{
-  bool light[MAX];
-  int num;
-} Lamps;
-#define MAX_RES 8
+  char seq[MAX_LEN];
+  int len;
+} Primitive;
 
-Lamps res[MAX_RES];
-int resNum = 0;
-
-int
-compare(const void * l1,const void * l2){
-  int i =0;
-  while(i<n){
-    if(((Lamps*)l1)->light[i]!=((Lamps *) l2)->light[i])
-      return ((Lamps*)l1)->light[i] - ((Lamps *) l2)->light[i];
-    i++;
-  }
-  return 0;
-}
+Primitive eles[MAX_NUM];
+int num=0;
 
 void
 input(){
-  fin>>n>>c;
-  int t;
-  fin>>t;
-  while(t != -1){
-    on[onNum++] = t;
-    fin>>t;
+  char a[MAX_LEN]={0};
+  fin>>a;
+  while(a[0]!='.'){
+    strcpy(eles[num++].seq,a);
+    fin>>a;
   }
-  fin>>t;
-  while(t != -1){
-    off[offNum++] =t;
-    fin>>t;
+  char s[77] = {0};
+  while(!fin.eof()){
+    memset(s,0,77);
+    fin>>s;
+    strcpy(str+strLen,s);
+    strLen+=strlen(s);
   }
-}
-
-void
-out(Lamps& lamps){
-  for(int i=0;i<n;i++)
-    fout<<lamps.light[i];
-  fout<<endl;
 }
 
 void
 output(){
-  if(resNum == 0) {fout<<"IMPOSSIBLE"<<endl; return;}
-  qsort(res,resNum,sizeof(Lamps),compare);
-  Lamps& last = res[0];
-  out(last);
-  for(int i=1;i<resNum;i++){
-    if(compare(&last,&res[i])){
-      out(res[i]);
-      last = res[i];
-    }
-  }
+  for(int i=0;i<num;i++)
+    cout<<eles[i].seq<<endl;
+  cout<<str<<endl;
 }
 
-void
-case0(int c){
-  if(c%2==0 && offNum==0) {
-    Lamps& lamp = res[resNum++];
-    for(int i=0;i<n;i++)
-      lamp.light[i] = true;
-  }
-}
-
-void
-case1(){
-  if(onNum==0){
-    Lamps& lamp = res[resNum++];
-    for(int i=0;i<n;i++)
-      lamp.light[i] = false;
-  }
-}
-
-void
-case2(){
-  for(int i=0;i<offNum;i++)
-    if(off[i]%2!=1) return;
-  for(int i=0;i<onNum;i++)
-    if(on[i]%2!=0) return;
-
-  Lamps& lamp = res[resNum++];
-  for(int i=0;i<n;i++)
-    if((i+1)%2==0) lamp.light[i] = true;
-    else lamp.light[i] = false;
-}
-
-void
-case3(){
-  for(int i=0;i<offNum;i++)
-    if(off[i]%2!=0) return;
-  for(int i=0;i<onNum;i++)
-    if(on[i]%2!=1) return;
-
-  Lamps& lamp = res[resNum++];
-  for(int i=0;i<n;i++)
-    if((i+1)%2==1) lamp.light[i] = true;
-    else lamp.light[i] = false;
-}
-
-void
-case41(){
-  for(int i=0;i<offNum;i++)
-    if(off[i]%3==1) return;
-  for(int i=0;i<onNum;i++)
-    if(on[i]%3!=1) return;
-
-  Lamps& lamp = res[resNum++];
-  for(int i=0;i<n;i++)
-    if((i+1)%3==1) lamp.light[i] = true;
-    else lamp.light[i] = false;
-}
-
-void
-case42(){
-  for(int i=0;i<offNum;i++){
-    if(off[i]%2==1 && off[i]%3!=1) continue;
-    else if (off[i]%2==0 && off[i]%3==1) continue;
-    else return;
-  }
-  for(int i=0;i<onNum;i++){
-    if(on[i]%2==0 && on[i]%3!=1) continue;
-    else if (on[i]%2==1 && on[i]%3==1) continue;
-    else return;
-  }
-
-  Lamps& lamp = res[resNum++];
-  for(int i=0;i<n;i++)
-    if((i+1)%2==1 && (i+1)%3==1) lamp.light[i] = true;
-    else if((i+1)%2==0 && (i+1)%3!=1) lamp.light[i] = true;
-    else lamp.light[i] = false;
-}
-
-void
-case43(){
-  for(int i=0;i<offNum;i++){
-    if(off[i]%2==0 && off[i]%3!=1) continue;
-    else if (off[i]%2==1 && off[i]%3==1) continue;
-    else return;
-  }
-  for(int i=0;i<onNum;i++){
-    if(on[i]%2==1 && on[i]%3!=1) continue;
-    else if (on[i]%2==0 && on[i]%3==1) continue;
-    else return;
-  }
-
-  Lamps& lamp = res[resNum++];
-  for(int i=0;i<n;i++)
-    if((i+1)%2==0 && (i+1)%3==1) lamp.light[i] = true;
-    else if((i+1)%2==1 && (i+1)%3!=1) lamp.light[i] = true;
-    else lamp.light[i] = false;
-}
-
-void
-case4(int c){
-  if(c%2==0){
-    case41();
-    case42();
-    case43();
-  }
-  if(c%2 ==1 || c%3==1)
-  {
-    for(int i=0;i<offNum;i++)
-      if(off[i]%3!=1) return;
-    for(int i=0;i<onNum;i++)
-      if(on[i]%3==1) return;
-
-    Lamps& lamp = res[resNum++];
-    for(int i=0;i<n;i++)
-      if((i+1)%3==1) lamp.light[i] = false;
-      else lamp.light[i] = true;
-  }
-}
 
 void
 solve(){
-  case0(c);
-  if(c==0) {
-    return;
-  }
-  case1();
-  case2();
-  case3();
-  case4(c);
 }
 
 int main() {

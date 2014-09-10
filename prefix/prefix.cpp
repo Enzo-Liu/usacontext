@@ -7,7 +7,7 @@
 #include <fstream>
 #include <string>
 #include <string.h>
-#include <queue>
+#include <set>
 #include <stdlib.h>
 #include <math.h>
 
@@ -22,14 +22,22 @@ ifstream fin ("prefix.in");
 
 char str[MAX_STR_LEN] = {0};
 int strLen=0;
+int res = 0;
 
 typedef struct{
   char seq[MAX_LEN];
-  int len;
 } Primitive;
 
 Primitive eles[MAX_NUM];
 int num=0;
+
+set<int> states;
+
+int compare(const void * p1,const void * p2){
+  Primitive* r1 = (Primitive*) p1;
+  Primitive* r2 = (Primitive*) p2;
+  return strcmp(r1->seq,r2->seq);
+}
 
 void
 input(){
@@ -46,18 +54,41 @@ input(){
     strcpy(str+strLen,s);
     strLen+=strlen(s);
   }
+  qsort(eles,num,sizeof(Primitive),compare);
+  states.insert(0);
 }
 
 void
 output(){
-  for(int i=0;i<num;i++)
-    cout<<eles[i].seq<<endl;
-  cout<<str<<endl;
+  fout<<res<<endl;
 }
 
+void
+find(char* s,int cur){
+  for(int i=0;i<num;i++){
+    int cmp = strncmp(eles[i].seq,s,strlen(eles[i].seq));
+    if(cmp == 0) {
+      int n_cur = cur+strlen(eles[i].seq);
+      states.insert(n_cur);
+      if(n_cur>res) res = n_cur;
+    }
+    if(cmp>0) break;
+  }
+}
+
+void
+find(int cur){
+  char * s = str+cur;
+  find(s,cur);
+}
 
 void
 solve(){
+  while(!states.empty()){
+    int cur = *states.begin();
+    states.erase(cur);
+    find(cur);
+  }
 }
 
 int main() {

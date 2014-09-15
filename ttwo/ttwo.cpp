@@ -88,6 +88,7 @@ output(){
 
 void
 solve(){
+  //if they are about to meet,it should be less than 160000
   while(!hasSolved && t<=1000000){
     if(farmer.i==cow.i && farmer.j==cow.j){
       hasSolved = true;

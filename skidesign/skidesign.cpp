@@ -1,6 +1,6 @@
 /*
   ID: liu.enz1
-  PROG: wormhole
+  PROG: skidesign
   LANG: C++
 */
 #include <iostream>
@@ -13,8 +13,8 @@
 
 using namespace std;
 
-ofstream fout ("wormhole.out");
-ifstream fin ("wormhole.in");
+ofstream fout ("skidesign.out");
+ifstream fin ("skidesign.in");
 
 void
 input(){

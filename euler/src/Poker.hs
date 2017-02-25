@@ -4,7 +4,8 @@ import           Data.Char  (digitToInt, isDigit)
 import           Data.List  (sort)
 import           Data.Maybe (isJust, mapMaybe)
 
-data Card = Heart Int | Spade Int | Diamond Int | Club Int deriving Show
+data CardType = Heart | Spade | Diamond | Club deriving (Eq, Show)
+data Card = Card CardType Int deriving Show
 data Rank = High Int Int Int Int Int |
             Pair Int Int Int Int |
             Pair2 Int Int Int |
@@ -17,10 +18,7 @@ data Rank = High Int Int Int Int Int |
             Royal deriving (Eq, Ord, Show)
 
 cardNum :: Card -> Int
-cardNum (Heart i)   = i
-cardNum (Spade i)   = i
-cardNum (Diamond i) = i
-cardNum (Club i)    = i
+cardNum (Card _ i)   = i
 
 toNum :: Char -> Maybe Int
 toNum 'A' = Just 14
@@ -32,10 +30,10 @@ toNum n   | isDigit n = Just $ digitToInt n
 toNum _   = Nothing
 
 toPoker :: String -> Maybe Card
-toPoker [a,'H'] = fmap Heart (toNum a)
-toPoker [a,'S'] = fmap Spade (toNum a)
-toPoker [a,'D'] = fmap Diamond (toNum a)
-toPoker [a,'C'] = fmap Club (toNum a)
+toPoker [a,'H'] = fmap (Card Heart) (toNum a)
+toPoker [a,'S'] = fmap (Card Spade) (toNum a)
+toPoker [a,'D'] = fmap (Card Diamond) (toNum a)
+toPoker [a,'C'] = fmap (Card Club) (toNum a)
 toPoker _       = Nothing
 
 compareRank :: [Rank] -> [Rank] -> Ordering
@@ -60,11 +58,7 @@ isCont values = isSortedCont (sort values)
 
 isSameSuitBy :: [Card] -> Card -> Bool
 isSameSuitBy [] _                         = True
-isSameSuitBy (Heart _:xs) y@(Heart _)     = isSameSuitBy xs y
-isSameSuitBy (Spade _:xs) y@(Spade _)     = isSameSuitBy xs y
-isSameSuitBy (Diamond _:xs) y@(Diamond _) = isSameSuitBy xs y
-isSameSuitBy (Club _:xs) y@(Club _)       = isSameSuitBy xs y
-isSameSuitBy _ _                          = False
+isSameSuitBy (Card t1 _:xs) y@(Card t2 _) = t1 == t2 && isSameSuitBy xs y
 
 isFlush :: [Card] -> Bool
 isFlush []     = True
@@ -178,5 +172,4 @@ rankRules = [royal,
              kind,
              pair2,
              pair,
-             high
-             ]
+             high]

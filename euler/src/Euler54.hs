@@ -9,6 +9,8 @@ module Euler54 where
 import           Poker
 import           Data.Maybe (mapMaybe)
 import           System.IO
+import           Data.Char
+import           Control.Arrow
 
 
 
@@ -28,3 +30,9 @@ main = do
   handle <- openFile "/Users/enzo/Downloads/p054_poker.txt" ReadMode
   contents <- hGetContents handle
   print $ length . filter win . lines $ contents
+
+countLowerAndDigit :: String -> Int
+countLowerAndDigit = length . filter (\c -> isDigit c || isLower c)
+
+count :: String -> Int
+count = length . filter (isDigit &&& isLower >>> uncurry (||))

@@ -12,8 +12,6 @@ import           System.IO
 import           Data.Char
 import           Control.Arrow
 
-
-
 getCards :: String -> ([Card],[Card])
 getCards str = splitAt 5 $ mapMaybe toPoker $ words str
 
